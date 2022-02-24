@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <button onclick="SendMessage()">Send</button>
+    </div>*@
+
+@*<script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+        connection.start().catch(error => consol.log(error));
+        console.log(connection);
+
+        connection.on("OnConnected", (connectionId) => {
+            console.log(connectionId)
+        });
+
+        function SendMessage() {
+            connection.invoke("SendMessage", "Salam");
+        }
+
+        connection.on("ReceiveMessage", (message) => {
+            alert(message);
+        });
+    </script>*@
+
+
+@*<div class="text-center">
+        <div id="chat">
+            <form action="/" method="post">
+                <label for="message">Message:</label>
+                <input type="text" id="message" />
+                <input type="submit" id="send" value="Send" onclick="(event) => sendMessage()" />
+            </form>
+
+            <ul id="messages">
+
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+        connection.start().catch(error => consol.log(error));
+
+        document.getElementById('send').addEventListener("click", event => {
+            var messageInput = document.getElementById('message');
+            var messageValue = messageInput.value;
+            messageInput.value = "";
+            connection.invoke("SendMessage", messageValue);
+            event.preventDefault();
+        })
+
+        connection.on("ReceiveMessage", (message) => {
+            appendLine(message);
+        });
+
+        function appendLine(line) {
+            let li = document.createElement('li');
+            li.innerText = line;
+            document.getElementById('messages').appendChild(li);
+        }
+
+    </script>*@
+
+<div class="text-center">
+    <div id="clients">
+        <ul id="userList">
+
+        </ul>
+    </div>
+</div>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .build();
+    connection.start().catch(error => consol.log(error));
+
+    //document.getElementById('send').addEventListener("click", event => {
+    //    var messageInput = document.getElementById('message');
+    //    var messageValue = messageInput.value;
+    //    messageInput.value = "";
+    //    connection.invoke("SendMessage", messageValue);
+    //    event.preventDefault();
+    //})
+
+    //connection.on("ReceiveMessage", (message) => {
+    //    appendLine(message);
+    //});
+
+    
+
+    connection.on("OnConnected", (connectionId) => {
+        appendLine(connectionId);
+        openNotepad(connectionId);
+    });
+
+    function appendLine(line) {
+        let li = document.createElement('li');
+        let kod = line;
+        kod += `<input type="submit" id="notepad" value="Open Notepad" onclick="openNotepad('')" style="margin: 10px" />`
+        kod += '<input type="submit" id="edge" value="Open Microsoft Edge" onclick="openMicrosoftEdge()" style="margin: 10px" />'
+        li.innerHTML = kod;
+        document.getElementById('userList').appendChild(li);
+    }
+
+    function openNotepad(connectionId) {
+        connection.invoke("OpenNotepad", connectionId);
+    }
+
+    //document.getElementById('notepad').addEventListener("click", event => {
+    //    alert(document.getElementById("notepad").innerText)
+    //    connection.invoke("OpenNotepad", "Salam");
+    //    event.preventDefault();
+    //})
+
+
+
+</script>
